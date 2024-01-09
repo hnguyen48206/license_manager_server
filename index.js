@@ -236,9 +236,9 @@ app.post('/generate_license', celebrate({
             algorithm: "RS256",
             expiresIn: data.expiresIn ? data.expiresIn : '99y',
         })
-    return res.send({
-        code:1,
-        message:'Tạo licenseKey thành công',
+    res.send({
+        code: 1,
+        message: 'Tạo licenseKey thành công',
         generatedKey: generatedKey
     }
     );
@@ -249,24 +249,22 @@ app.post('/verify_license', celebrate({
         licenseKey: Joi.string().min(10).max(5000).required()
     })
 }), function (req, res) {
-    let message= '';
+    let message = '';
     jwt.verify(req.body.licenseKey, publicKEY, function (err, decoded) {
         if (err) {
             console.log(err.name);
             if (err.name == 'TokenExpiredError')
-                message='expired'
+                message = 'expired'
             else
-            message='invalid'
+                message = 'invalid'
         }
         else
-        message='valid'
+            message = 'valid'
         res.send({
-            code:1,
-            message:message
+            code: 1,
+            message: message
         })
     });
-
-    return res.send('User has been added successfully');
 });
 
 process.on('uncaughtException', function (err) {
