@@ -35,6 +35,10 @@ function createDbConnection() {
         });
         console.log("Connection with SQLite has been established");
     }
+    database.exec('PRAGMA foreign_keys = ON;', pragmaErr => {
+        if (pragmaErr) console.log('Foreign key enforcement pragma query failed.')
+        else console.log('Foreign key enforcement pragma query ok.');
+      });
 }
 
 //////////////////////////////// Customer API //////////////////////////////////
