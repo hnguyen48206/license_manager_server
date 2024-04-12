@@ -13,7 +13,8 @@ const { errors } = require('celebrate');
 const Joi = require('joi')
     .extend(require('@joi/date'));
 
-
+const macs = require('os').networkInterfaces()
+console.log(macs)
 const APP_PORT = process.env.APP_PORT ? process.env.APP_PORT : '1010';
 var fs = require('fs');
 const jwt = require("jsonwebtoken");
@@ -38,7 +39,29 @@ function createDbConnection() {
     database.exec('PRAGMA foreign_keys = ON;', pragmaErr => {
         if (pragmaErr) console.log('Foreign key enforcement pragma query failed.')
         else console.log('Foreign key enforcement pragma query ok.');
-      });
+    });
+}
+
+function verifyMacAddress(mac) {
+    if (isObject(macs)) {
+        let check = false
+        for (const [key, value] of Object.entries(macs)) {
+            if (value.length > 0) {
+                value.forEach(interface => {
+                    if (interface.mac == mac)
+                        check = true;
+                });
+            }
+        }
+        return check;
+    }
+    else
+        return false;
+}
+
+function isObject(val) {
+    if (val === null) { return false; }
+    return ((typeof val === 'function') || (typeof val === 'object'));
 }
 
 //////////////////////////////// Customer API //////////////////////////////////
